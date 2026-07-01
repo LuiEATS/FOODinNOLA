@@ -45,6 +45,7 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
   const initialCategory = searchParams.get("category");
   const initialNeighborhood = searchParams.get("neighborhood");
   const initialQuery = searchParams.get("q") ?? "";
+  const tagFilter = searchParams.get("tag");
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
   const userLocation = lat && lng ? { lat: Number(lat), lng: Number(lng) } : null;
@@ -53,6 +54,7 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
 
   const [activePill, setActivePill] = useState(initialPill);
   const [neighborhoodFilter, setNeighborhoodFilter] = useState<string | null>(initialNeighborhood);
+  const [tag, setTag] = useState<string | null>(tagFilter);
   const [query, setQuery] = useState(initialQuery);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -63,6 +65,7 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
     let result: FilteredLocation[] = locations.filter((location) => {
       if (activeCategorySlug && location.category !== activeCategorySlug) return false;
       if (neighborhoodFilter && location.neighborhood !== neighborhoodFilter) return false;
+      if (tag && !(location.tags ?? []).some((t) => t.toLowerCase() === tag.toLowerCase())) return false;
       if (q) {
         const haystack = [location.name, ...(location.tags ?? [])].join(" ").toLowerCase();
         if (!haystack.includes(q)) return false;
@@ -81,7 +84,7 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
     }
 
     return result;
-  }, [locations, activeCategorySlug, neighborhoodFilter, query, userLocation]);
+  }, [locations, activeCategorySlug, neighborhoodFilter, tag, query, userLocation]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -113,6 +116,15 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
             className="rounded-full border border-gold bg-gold-light px-4 py-1.5 text-sm font-medium text-gold"
           >
             {getNeighborhood(neighborhoodFilter)?.label ?? neighborhoodFilter} ✕
+          </button>
+        )}
+        {tag && (
+          <button
+            type="button"
+            onClick={() => setTag(null)}
+            className="rounded-full border border-gold bg-gold-light px-4 py-1.5 text-sm font-medium text-gold"
+          >
+            #{tag} ✕
           </button>
         )}
         <input

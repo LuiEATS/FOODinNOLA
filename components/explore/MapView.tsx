@@ -36,12 +36,16 @@ function escapeHtml(input: string) {
 
 export default function MapView({
   locations,
-  selectedId,
+  selectedId = null,
   onSelect,
+  center = NEW_ORLEANS_CENTER,
+  zoom = 13,
 }: {
   locations: MapLocation[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
+  center?: { lat: number; lng: number };
+  zoom?: number;
 }) {
   const mapDivRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -72,8 +76,8 @@ export default function MapView({
       if (cancelled || !mapDivRef.current) return;
 
       mapRef.current = new google.maps.Map(mapDivRef.current, {
-        center: NEW_ORLEANS_CENTER,
-        zoom: 13,
+        center,
+        zoom,
         streetViewControl: false,
       });
       infoWindowRef.current = new google.maps.InfoWindow();
@@ -85,6 +89,8 @@ export default function MapView({
     return () => {
       cancelled = true;
     };
+    // Only the initial center/zoom matter — this effect creates the map once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -111,7 +117,7 @@ export default function MapView({
         },
       });
       marker.addListener("click", () => {
-        onSelect(location.id);
+        onSelect?.(location.id);
         openInfoWindow(marker, location, category?.label ?? "Uncategorized");
       });
       markersRef.current.set(location.id, marker);
