@@ -26,6 +26,7 @@ const FILTER_PILLS: { key: string; label: string; categorySlug: string | null }[
   { key: "music", label: "Music", categorySlug: "live-music" },
   { key: "trucks", label: "Trucks", categorySlug: "food-trucks" },
   { key: "cafe", label: "Café", categorySlug: "cafes" },
+  { key: "snoballs", label: "Snoballs", categorySlug: "snoballs" },
   { key: "experiences", label: "Experiences", categorySlug: "experiences" },
 ];
 

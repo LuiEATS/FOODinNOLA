@@ -12,6 +12,7 @@ export const CATEGORIES: Category[] = [
   { slug: "live-music", label: "Live Music", emoji: "🎷", pinColor: "gold" },
   { slug: "food-trucks", label: "Food Trucks", emoji: "🚚", pinColor: "green" },
   { slug: "cafes", label: "Cafés", emoji: "☕", pinColor: "green" },
+  { slug: "snoballs", label: "Snoballs", emoji: "🍧", pinColor: "green" },
   { slug: "experiences", label: "Experiences", emoji: "✨", pinColor: "purple" },
 ];
 
