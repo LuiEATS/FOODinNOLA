@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, Caveat } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
@@ -21,10 +22,22 @@ const caveat = Caveat({
   weight: ["500", "700"],
 });
 
+const DEFAULT_DESCRIPTION =
+  "A curated guide to restaurants, bars, food trucks, live music venues, cafés, and pop-ups in New Orleans.";
+
 export const metadata: Metadata = {
-  title: "FOODinNOLA — Restaurants, Bars & More in New Orleans",
-  description:
-    "A curated guide to restaurants, bars, food trucks, live music venues, cafés, and pop-ups in New Orleans.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Restaurants, Bars & More in New Orleans`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    siteName: SITE_NAME,
+    type: "website",
+    title: `${SITE_NAME} — Restaurants, Bars & More in New Orleans`,
+    description: DEFAULT_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

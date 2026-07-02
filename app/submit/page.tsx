@@ -1,7 +1,13 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import SubmitForm from "@/components/submit/SubmitForm";
 import AdBanner from "@/components/AdBanner";
+
+export const metadata: Metadata = {
+  title: "Submit a Spot",
+  description: "Know a great restaurant, bar, or hidden gem in New Orleans? Submit it to FOODinNOLA.",
+};
 
 export default async function SubmitPage() {
   const supabase = await createClient();

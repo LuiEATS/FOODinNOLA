@@ -1,8 +1,11 @@
+import { cache } from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPlaceReviews } from "@/lib/googlePlaces";
 import { getCategory, getNeighborhood } from "@/lib/constants";
+import { SITE_URL } from "@/lib/site";
 import PhotoGallery from "@/components/locations/PhotoGallery";
 import GoogleReviewsSection from "@/components/locations/GoogleReviewsSection";
 import CommunityComments from "@/components/locations/CommunityComments";
@@ -10,15 +13,10 @@ import SuggestEditButton from "@/components/locations/SuggestEditButton";
 import MapView from "@/components/explore/MapView";
 import AdBanner from "@/components/AdBanner";
 
-export default async function LocationDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+// Cached per-request so generateMetadata and the page component share one query.
+const getLocation = cache(async (id: string) => {
   const supabase = await createClient();
-
-  const { data: location } = await supabase
+  const { data } = await supabase
     .from("locations")
     .select(
       "id, name, description, address, city, state, zip, latitude, longitude, phone, website, hours, payment_info, tags, category, neighborhood, google_place_id",
@@ -27,6 +25,39 @@ export default async function LocationDetailPage({
     .eq("site", "foodinnola")
     .eq("is_published", true)
     .single();
+  return data;
+});
+
+type Props = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const location = await getLocation(id);
+
+  if (!location) {
+    return { title: "Spot Not Found" };
+  }
+
+  const category = getCategory(location.category);
+  const neighborhood = getNeighborhood(location.neighborhood);
+  const title = location.name;
+  const description =
+    location.description ??
+    `${location.name} — ${category?.label ?? "a spot"}${neighborhood ? ` in ${neighborhood.label}` : ""}, New Orleans. Reviews, hours, and directions on FOODinNOLA.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/locations/${location.id}` },
+    openGraph: { title, description, type: "website", url: `${SITE_URL}/locations/${location.id}` },
+  };
+}
+
+export default async function LocationDetailPage({ params }: Props) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const location = await getLocation(id);
 
   if (!location) notFound();
 
@@ -77,8 +108,36 @@ export default async function LocationDetailPage({
   const category = getCategory(location.category);
   const neighborhood = getNeighborhood(location.neighborhood);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: location.name,
+    description: location.description ?? undefined,
+    url: `${SITE_URL}/locations/${location.id}`,
+    telephone: location.phone ?? undefined,
+    sameAs: location.website ?? undefined,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: location.address,
+      addressLocality: location.city,
+      addressRegion: location.state,
+      postalCode: location.zip ?? undefined,
+      addressCountry: "US",
+    },
+    geo:
+      location.latitude != null && location.longitude != null
+        ? {
+            "@type": "GeoCoordinates",
+            latitude: location.latitude,
+            longitude: location.longitude,
+          }
+        : undefined,
+  };
+
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
+      {/* eslint-disable-next-line react/no-danger */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PhotoGallery locationId={location.id} photos={photos ?? []} currentUserId={currentUser?.id ?? null} />
 
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">

@@ -1,7 +1,13 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdBanner from "@/components/AdBanner";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminPage() {
   const supabase = await createClient();
