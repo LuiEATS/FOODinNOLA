@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { NEIGHBORHOODS } from "@/lib/constants";
+import { CATEGORIES, NEIGHBORHOODS } from "@/lib/constants";
 
 type EditableFields = {
   name: string;
   description: string | null;
   address: string;
+  category: string | null;
   neighborhood: string | null;
   phone: string | null;
   website: string | null;
@@ -123,6 +124,21 @@ export default function SuggestEditButton({
                   {field("name", "Name")}
                   {field("description", "Description", true)}
                   {field("address", "Address")}
+                  <div>
+                    <label className="block text-xs font-medium text-muted">Category</label>
+                    <select
+                      value={form.category ?? ""}
+                      onChange={(event) => setForm({ ...form, category: event.target.value || null })}
+                      className="mt-1 w-full rounded-lg border border-purple-soft/60 p-2 text-sm"
+                    >
+                      <option value="">Select a category…</option>
+                      {CATEGORIES.map((c) => (
+                        <option key={c.slug} value={c.slug}>
+                          {c.emoji} {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <div>
                     <label className="block text-xs font-medium text-muted">Neighborhood</label>
                     <select
