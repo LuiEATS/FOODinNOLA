@@ -203,6 +203,7 @@ export default async function LocationDetailPage({
               name: location.name,
               description: location.description,
               address: location.address,
+              neighborhood: location.neighborhood,
               phone: location.phone,
               website: location.website,
               hours: location.hours,

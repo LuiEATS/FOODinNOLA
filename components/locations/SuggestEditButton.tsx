@@ -3,11 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { NEIGHBORHOODS } from "@/lib/constants";
 
 type EditableFields = {
   name: string;
   description: string | null;
   address: string;
+  neighborhood: string | null;
   phone: string | null;
   website: string | null;
   hours: string | null;
@@ -121,6 +123,21 @@ export default function SuggestEditButton({
                   {field("name", "Name")}
                   {field("description", "Description", true)}
                   {field("address", "Address")}
+                  <div>
+                    <label className="block text-xs font-medium text-muted">Neighborhood</label>
+                    <select
+                      value={form.neighborhood ?? ""}
+                      onChange={(event) => setForm({ ...form, neighborhood: event.target.value || null })}
+                      className="mt-1 w-full rounded-lg border border-purple-soft/60 p-2 text-sm"
+                    >
+                      <option value="">Select a neighborhood…</option>
+                      {NEIGHBORHOODS.map((n) => (
+                        <option key={n.slug} value={n.slug}>
+                          {n.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   {field("phone", "Phone")}
                   {field("website", "Website")}
                   {field("hours", "Hours")}
