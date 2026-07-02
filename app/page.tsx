@@ -4,6 +4,7 @@ import { CATEGORIES, NEIGHBORHOODS } from "@/lib/constants";
 import HeroSearch from "@/components/HeroSearch";
 import LocationCard from "@/components/LocationCard";
 import AdBanner from "@/components/AdBanner";
+import SnowballSpotPromo from "@/components/SnowballSpotPromo";
 
 const NEIGHBORHOOD_COLORS = [
   "bg-purple",
@@ -106,17 +107,19 @@ export default async function Home() {
           <h2 className="font-heading text-3xl font-bold italic text-text">Browse by Category</h2>
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {CATEGORIES.map((category) => (
-              <Link
+              <div
                 key={category.slug}
-                href={`/explore?category=${category.slug}`}
                 className="rounded-2xl bg-white p-6 text-center shadow-sm transition hover:shadow-md"
               >
-                <div className="text-4xl">{category.emoji}</div>
-                <div className="mt-2 font-heading text-lg font-bold text-text">{category.label}</div>
-                <div className="text-sm text-muted">
-                  {categoryCounts.get(category.slug) ?? 0} spots
-                </div>
-              </Link>
+                <Link href={`/explore?category=${category.slug}`} className="block">
+                  <div className="text-4xl">{category.emoji}</div>
+                  <div className="mt-2 font-heading text-lg font-bold text-text">{category.label}</div>
+                  <div className="text-sm text-muted">
+                    {categoryCounts.get(category.slug) ?? 0} spots
+                  </div>
+                </Link>
+                {category.slug === "snoballs" && <SnowballSpotPromo className="mt-3" />}
+              </div>
             ))}
           </div>
         </div>

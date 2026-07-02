@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getCategory, getNeighborhood } from "@/lib/constants";
+import SnowballSpotPromo from "@/components/SnowballSpotPromo";
 import MapView from "./MapView";
 
 type ExploreLocation = {
@@ -92,6 +93,12 @@ export default function ExploreClient({ locations }: { locations: ExploreLocatio
       {userLocation && (
         <div className="bg-gold-light px-6 py-3 text-center text-sm font-medium text-gold">
           📍 {filtered.length} spot{filtered.length === 1 ? "" : "s"} near you
+        </div>
+      )}
+
+      {activeCategorySlug === "snoballs" && (
+        <div className="flex justify-center bg-green-light px-6 py-3">
+          <SnowballSpotPromo />
         </div>
       )}
 
