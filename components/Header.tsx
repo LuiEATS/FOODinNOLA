@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UserNav from "./UserNav";
 
 export default function Header() {
   return (
@@ -13,6 +14,7 @@ export default function Header() {
         <Link href="/submit" className="hover:text-purple-deep">
           Submit a Spot
         </Link>
+        <UserNav />
       </nav>
     </header>
   );
