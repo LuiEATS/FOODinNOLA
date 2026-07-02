@@ -64,7 +64,7 @@ export default async function Home() {
         />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <div className="flex h-28 w-28 items-center justify-center rounded-full bg-cream shadow-lg">
-            <Image src="/logo.png" alt="FOODinNOLA" width={96} height={96} className="h-20 w-20" priority />
+            <Image src="/logo.png" alt="FOODinNOLA" width={87} height={80} className="h-20 w-auto" priority />
           </div>
           <p className="font-caveat text-3xl text-gold-light">Your guide to eating &amp; drinking in</p>
           <h1 className="font-heading text-5xl font-bold italic sm:text-6xl">New Orleans</h1>
