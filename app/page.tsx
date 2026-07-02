@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { CATEGORIES, NEIGHBORHOODS } from "@/lib/constants";
@@ -62,6 +63,9 @@ export default async function Home() {
           className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,253,247,0.07)_0px,rgba(255,253,247,0.07)_1px,transparent_1px,transparent_18px)]"
         />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+          <div className="flex h-28 w-28 items-center justify-center rounded-full bg-cream shadow-lg">
+            <Image src="/logo.png" alt="FOODinNOLA" width={96} height={96} className="h-20 w-20" priority />
+          </div>
           <p className="font-caveat text-3xl text-gold-light">Your guide to eating &amp; drinking in</p>
           <h1 className="font-heading text-5xl font-bold italic sm:text-6xl">New Orleans</h1>
           <p className="max-w-xl text-lg text-purple-soft">
