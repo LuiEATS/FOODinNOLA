@@ -83,11 +83,23 @@ export default async function LocationDetailPage({
 
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <p className="text-sm font-medium text-muted">
-            {category?.label ?? "Uncategorized"}
-            {neighborhood ? ` · ${neighborhood.label}` : ""}
-          </p>
-          <h1 className="mt-1 font-heading text-4xl font-bold italic text-text">{location.name}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href={`/explore?category=${category?.slug ?? ""}`}
+              className="rounded-full bg-purple-light px-3 py-1 text-xs font-medium text-purple hover:bg-purple-soft"
+            >
+              {category ? `${category.emoji} ${category.label}` : "Uncategorized"}
+            </Link>
+            {neighborhood && (
+              <Link
+                href={`/explore?neighborhood=${neighborhood.slug}`}
+                className="rounded-full bg-gold-light px-3 py-1 text-xs font-medium text-gold hover:bg-gold-light/70"
+              >
+                📍 {neighborhood.label}
+              </Link>
+            )}
+          </div>
+          <h1 className="mt-2 font-heading text-4xl font-bold italic text-text">{location.name}</h1>
           {location.description && <p className="mt-3 text-text/80">{location.description}</p>}
 
           {location.tags && location.tags.length > 0 && (
