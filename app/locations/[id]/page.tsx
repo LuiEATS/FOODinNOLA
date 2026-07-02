@@ -43,15 +43,20 @@ export default async function LocationDetailPage({
     supabase.auth.getUser(),
   ]);
 
-  const comments = (commentRows ?? []).map((comment) => ({
-    id: comment.id,
-    body: comment.body,
-    photo_url: comment.photo_url,
-    created_at: comment.created_at,
-    user_id: comment.user_id,
-    display_name: comment.profiles?.display_name ?? null,
-    avatar_color: comment.profiles?.avatar_color ?? null,
-  }));
+  const comments = (commentRows ?? []).map((comment) => {
+    // Supabase's untyped client infers embedded to-one relations as arrays;
+    // Postgrest actually returns a single object at runtime for this FK.
+    const profile = Array.isArray(comment.profiles) ? comment.profiles[0] : comment.profiles;
+    return {
+      id: comment.id,
+      body: comment.body,
+      photo_url: comment.photo_url,
+      created_at: comment.created_at,
+      user_id: comment.user_id,
+      display_name: profile?.display_name ?? null,
+      avatar_color: profile?.avatar_color ?? null,
+    };
+  });
 
   let currentUser = null;
   if (userData.user) {
@@ -87,7 +92,7 @@ export default async function LocationDetailPage({
 
           {location.tags && location.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {location.tags.map((tag) => (
+              {location.tags.map((tag: string) => (
                 <Link
                   key={tag}
                   href={`/explore?tag=${encodeURIComponent(tag)}`}

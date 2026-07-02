@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 type Photo = {
   id: string;
   photo_url: string;
-  is_primary: boolean;
+  is_primary: boolean | null;
 };
 
 export default function PhotoGallery({

@@ -9,8 +9,8 @@ type Comment = {
   id: string;
   body: string;
   photo_url: string | null;
-  created_at: string;
-  user_id: string;
+  created_at: string | null;
+  user_id: string | null;
   display_name: string | null;
   avatar_color: string | null;
 };
@@ -22,7 +22,8 @@ type CurrentUser = {
   role: string;
 };
 
-function timeAgo(isoDate: string) {
+function timeAgo(isoDate: string | null) {
+  if (!isoDate) return "";
   const seconds = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000);
   const units: [string, number][] = [
     ["year", 31536000],
