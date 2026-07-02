@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     title: `${SITE_NAME} — Restaurants, Bars & More in New Orleans`,
     description: DEFAULT_DESCRIPTION,
+    images: [{ url: "/logo.png" }],
   },
 };
 
