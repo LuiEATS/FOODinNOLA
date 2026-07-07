@@ -7,7 +7,13 @@ import { createClient } from "@/lib/supabase/client";
 
 type Profile = { display_name: string | null; avatar_color: string | null; role: string };
 
-export default function UserNav() {
+export default function UserNav({
+  variant = "desktop",
+  onNavigate,
+}: {
+  variant?: "desktop" | "mobile";
+  onNavigate?: () => void;
+}) {
   const router = useRouter();
   const supabase = createClient();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -33,6 +39,7 @@ export default function UserNav() {
 
   async function signOut() {
     await supabase.auth.signOut();
+    onNavigate?.();
     router.push("/");
     router.refresh();
   }
@@ -41,7 +48,7 @@ export default function UserNav() {
 
   if (!profile) {
     return (
-      <Link href="/login" className="hover:text-purple-deep">
+      <Link href="/login" onClick={onNavigate} className="hover:text-purple-deep">
         Sign In
       </Link>
     );
@@ -50,9 +57,9 @@ export default function UserNav() {
   const initials = (profile.display_name?.[0] ?? "?").toUpperCase();
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={variant === "mobile" ? "flex flex-col gap-3" : "flex items-center gap-3"}>
       {profile.role === "admin" && (
-        <Link href="/admin" className="hidden text-gold-bright hover:text-gold sm:block">
+        <Link href="/admin" onClick={onNavigate} className="text-gold-bright hover:text-gold">
           Admin
         </Link>
       )}
@@ -63,9 +70,13 @@ export default function UserNav() {
         >
           {initials}
         </div>
-        <span className="hidden text-text sm:block">{profile.display_name}</span>
+        <span className="text-text">{profile.display_name}</span>
       </div>
-      <button type="button" onClick={signOut} className="text-xs text-muted hover:text-purple-deep">
+      <button
+        type="button"
+        onClick={signOut}
+        className={variant === "mobile" ? "text-left text-xs text-muted hover:text-purple-deep" : "text-xs text-muted hover:text-purple-deep"}
+      >
         Sign out
       </button>
     </div>
